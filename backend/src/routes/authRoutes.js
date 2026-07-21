@@ -8,7 +8,7 @@ const {
   logout,
 } = require("../controllers/authController");
 
-const { protect } = require("../middleware/authMiddleware");
+const { protect } = require("../middlewares/authMiddleware");
 
 router.post("/register", register);
 
