@@ -11,16 +11,59 @@ const userSchema = new mongoose.Schema(
       type: String,
       required: true,
       unique: true,
+      lowercase: true,
     },
 
     password: {
       type: String,
       required: true,
     },
+
+
+    role: {
+      type: String,
+      enum: ["customer", "owner", "admin", "guest"],
+      default: "customer",
+      required: true,
+    },
+
+    phone: {
+      type: String,
+    },
+
+    avatar: {
+      type: String, // Cloudinary URL
+    },
+
+    // Venue Owner specific
+    venueOwnerDetails: {
+      businessName: String,
+      bankAccount: String,
+      // etc.
+    },
+
+    // Admin specific (rarely used)
+    permissions: [{
+      type: String,
+    }],
+
+    isVerified: {
+      type: Boolean,
+      default: false,
+    },
+
+    isActive: {
+      type: Boolean,
+      default: true,
+    },
   },
   {
     timestamps: true,
   }
 );
+
+// Optional: Index for faster queries
+userSchema.index({ email: 1 });
+userSchema.index({ role: 1 });
 
 module.exports = mongoose.model("User", userSchema);
