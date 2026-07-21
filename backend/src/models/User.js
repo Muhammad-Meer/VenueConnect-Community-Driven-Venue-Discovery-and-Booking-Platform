@@ -1,3 +1,5 @@
+// ==================== FULL CORRECT CODE ====================
+
 const mongoose = require('mongoose');
 const bcrypt = require('bcryptjs');
 
@@ -28,9 +30,9 @@ const userSchema = new mongoose.Schema({
   avatar: String,
 }, { timestamps: true });
 
-// ✅ FIXED: Use regular function, not arrow function
-userSchema.pre('save', async function (next) {
-  // Only hash if password is modified or new
+// ==================== IMPORTANT PART (Line 30 se 45 tak) ====================
+userSchema.pre('save', async function(next) {     // ← Yeh line 30 hai (regular function)
+  
   if (!this.isModified('password')) {
     return next();
   }
@@ -38,11 +40,12 @@ userSchema.pre('save', async function (next) {
   try {
     const salt = await bcrypt.genSalt(10);
     this.password = await bcrypt.hash(this.password, salt);
-    next();
+    next();                                      // ← Yeh line 43 hai
   } catch (error) {
-    next(error);   // Pass error to Mongoose
+    next(error);                                 // ← Error handling
   }
 });
+// =====================================================================
 
 // Method to compare password
 userSchema.methods.matchPassword = async function (enteredPassword) {
