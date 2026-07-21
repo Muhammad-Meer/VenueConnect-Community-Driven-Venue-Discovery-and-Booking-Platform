@@ -30,20 +30,13 @@ const userSchema = new mongoose.Schema({
   avatar: String,
 }, { timestamps: true });
 
-// ==================== IMPORTANT PART (Line 30 se 45 tak) ====================
-userSchema.pre('save', async function(next) {     // ← Yeh line 30 hai (regular function)
-  
-  if (!this.isModified('password')) {
-    return next();
+userSchema.pre("save", async function () {
+  if (!this.isModified("password")) {
+    return;
   }
 
-  try {
-    const salt = await bcrypt.genSalt(10);
-    this.password = await bcrypt.hash(this.password, salt);
-    next();                                      // ← Yeh line 43 hai
-  } catch (error) {
-    next(error);                                 // ← Error handling
-  }
+  const salt = await bcrypt.genSalt(10);
+  this.password = await bcrypt.hash(this.password, salt);
 });
 // =====================================================================
 
