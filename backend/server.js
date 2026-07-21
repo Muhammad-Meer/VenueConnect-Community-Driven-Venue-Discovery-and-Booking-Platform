@@ -1,31 +1,29 @@
-require("dotenv").config();
-
-const express = require("express");
-const connectDB = require("./src/config/db");
-const cookieParser = require("cookie-parser");
-const cors = require("cors");
-const dns = require("dns");
-const app = express();
+const express = require('express');
+const cookieParser = require('cookie-parser');
+const dotenv = require('dotenv');
+const connectDB = require('./src/config/db');
 
 
- console.log("Before:", dns.getServers()); dns.setServers(["8.8.8.8", "1.1.1.1"]); console.log("After:", dns.getServers()); dns.resolve4("google.com", (err, addresses) => { console.log(err, addresses); });
- 
+
+const dns = require("dns"); console.log("Before:", dns.getServers()); dns.setServers(["8.8.8.8", "1.1.1.1"]); console.log("After:", dns.getServers()); dns.resolve4("google.com", (err, addresses) => { console.log(err, addresses); });
+dotenv.config();
 connectDB();
 
-app.use(express.json());
+const app = express();
 
+// Middleware
+app.use(express.json());
 app.use(cookieParser());
 
-app.use(
-  cors({
-    origin: "http://localhost:5173",
-    credentials: true,
-  })
-);
+// Routes
+app.use('/api/users', require('./src/routes/authRoutes'));
 
-// app.use("/api/auth", require("./src/routes/authRoutes"));
-app.use("/api/auth", require("./src/routes/authRoutes"));
+// Test route
+app.get('/', (req, res) => {
+  res.send('✅ Venue Booking API is running...');
+});
 
-app.listen(process.env.PORT, () => {
-  console.log(`Server Running on Port ${process.env.PORT}`);
+const PORT = process.env.PORT || 5000;
+app.listen(PORT, () => {
+  console.log(`🚀 Server running on port ${PORT}`);
 });
