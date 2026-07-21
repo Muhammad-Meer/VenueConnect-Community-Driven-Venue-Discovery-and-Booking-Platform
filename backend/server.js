@@ -1,7 +1,7 @@
 require("dotenv").config();
 
 const express = require("express");
-const connectDB = require("./config/db");
+const connectDB = require("./src/config/db");
 const cookieParser = require("cookie-parser");
 const cors = require("cors");
 
@@ -20,7 +20,8 @@ app.use(
   })
 );
 
-app.use("/api/auth", require("./routes/authRoutes"));
+// app.use("/api/auth", require("./src/routes/authRoutes"));
+app.use("/api/auth", require("./src/routes/authRoutes"));
 
 app.listen(process.env.PORT, () => {
   console.log(`Server Running on Port ${process.env.PORT}`);
