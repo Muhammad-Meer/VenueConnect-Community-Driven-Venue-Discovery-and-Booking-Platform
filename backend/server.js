@@ -1,33 +1,31 @@
+require('dotenv').config();
 const express = require('express');
-const cookieParser = require('cookie-parser');
-const dotenv = require('dotenv').config();
-const dns = require("dns");
+const cors = require('cors');
+const helmet = require('helmet');
 const connectDB = require('./src/config/db');
 
-
-
-console.log("Before:", dns.getServers());
-dns.setServers(["8.8.8.8", "1.1.1.1"]);
-console.log("After:", dns.getServers());
-dns.resolve4("google.com", (err, addresses) => { console.log(err, addresses); });
-
-
-connectDB();
 const app = express();
 
 // Middleware
+app.use(helmet());
+app.use(cors());
 app.use(express.json());
-app.use(cookieParser());
-app.use('/api/venues', require('./routes/venueRoutes'));
 
+// Connect Database
+connectDB();
 
 // Routes
-app.use('/api/users', require('./src/routes/authRoutes'));
+app.use('/api/auth', require('./src/routes/authRoutes'));
+app.use('/api/users', require('./src/routes/userRoutes'));
+app.use('/api/venues', require('./src/routes/venueRoutes'));
+app.use('/api/bookings', require('./src/routes/bookingRoutes'));
+app.use('/api/payments', require('./src/routes/paymentRoutes'));
+app.use('/api/reviews', require('./src/routes/reviewRoutes'));
+app.use('/api/notifications', require('./src/routes/notificationRoutes'));
+const errorHandler = require('./src/middlewares/errorHandler');
 
-// Test route
-app.get('/', (req, res) => {
-  res.send('✅ Venue Booking API is running...');
-});
+// ... all routes ke baad
+app.use(errorHandler);
 
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
