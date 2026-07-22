@@ -75,7 +75,7 @@ const getOwnerAnalytics = async (req, res) => {
         }
       },
       {
-        $group: {
+        $group: { 
           _id: null,
           totalBookings: { $sum: 1 }
         }
