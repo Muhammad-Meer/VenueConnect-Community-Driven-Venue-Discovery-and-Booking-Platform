@@ -4,6 +4,7 @@ const User = require('../models/User');
 const Payment = require('../models/Payment');
 
 // Owner Analytics
+
 const getOwnerAnalytics = async (req, res) => {
   try {
     const ownerId = req.user.id;
