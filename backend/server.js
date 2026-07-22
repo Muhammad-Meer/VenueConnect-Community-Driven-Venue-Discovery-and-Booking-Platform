@@ -1,12 +1,17 @@
 const express = require('express');
 const cookieParser = require('cookie-parser');
-const dotenv = require('dotenv');
+const dotenv = require('dotenv').config();
+const dns = require("dns");
 const connectDB = require('./src/config/db');
 
 
 
-const dns = require("dns"); console.log("Before:", dns.getServers()); dns.setServers(["8.8.8.8", "1.1.1.1"]); console.log("After:", dns.getServers()); dns.resolve4("google.com", (err, addresses) => { console.log(err, addresses); });
-dotenv.config();
+console.log("Before:", dns.getServers());
+dns.setServers(["8.8.8.8", "1.1.1.1"]);
+console.log("After:", dns.getServers());
+dns.resolve4("google.com", (err, addresses) => { console.log(err, addresses); });
+
+
 connectDB();
 const app = express();
 
