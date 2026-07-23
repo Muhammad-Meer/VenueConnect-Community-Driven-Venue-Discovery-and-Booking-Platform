@@ -1,23 +1,46 @@
-const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000/api'
+import axios from 'axios'
+import { getToken, clearAuthStorage } from '../utils/storage'
 
-async function request(endpoint, options = {}) {
-  const url = `${API_BASE_URL}${endpoint}`
-  const config = {
-    headers: {
-      'Content-Type': 'application/json',
-      ...options.headers,
-    },
-    ...options,
-  }
+/**
+ * Axios instance configured for the Venue Booking backend.
+ * Base URL can be overridden with VITE_API_URL.
+ */
+const api = axios.create({
+  baseURL: import.meta.env.VITE_API_URL || '/api',
+  headers: {
+    'Content-Type': 'application/json',
+  },
+  timeout: 15000,
+})
 
-  const response = await fetch(url, config)
-  const data = await response.json().catch(() => null)
+// Attach JWT on every request when available
+api.interceptors.request.use(
+  (config) => {
+    const token = getToken()
+    if (token) {
+      config.headers.Authorization = `Bearer ${token}`
+    }
+    return config
+  },
+  (error) => Promise.reject(error),
+)
 
-  if (!response.ok) {
-    throw new Error(data?.message || 'Something went wrong')
-  }
+// Normalize errors and handle 401
+api.interceptors.response.use(
+  (response) => response,
+  (error) => {
+    if (error.response?.status === 401) {
+      // Session expired — clear local auth (caller may redirect)
+      clearAuthStorage()
+    }
 
-  return data
-}
+    const message =
+      error.response?.data?.message ||
+      error.message ||
+      'Something went wrong. Please try again.'
 
-export default request
+    return Promise.reject(new Error(message))
+  },
+)
+
+export default api
