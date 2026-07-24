@@ -36,6 +36,7 @@ app.use("/api/bookings", require("./src/routes/bookingRoutes"));
 app.use("/api/payments", require("./src/routes/paymentRoutes"));
 app.use("/api/reviews", require("./src/routes/reviewRoutes"));
 app.use("/api/notifications", require("./src/routes/notificationRoutes"));
+app.use("/api/analytics", require("./src/routes/analyticsRoutes"));
 
 const errorHandler = require("./src/middlewares/errorHandler");
 app.use(errorHandler);
