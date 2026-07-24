@@ -1,42 +1,44 @@
-const TOKEN_KEY = 'venuebook_token'
-const USER_KEY = 'venuebook_user'
-
-export function getToken() {
+export function getItem(key, fallback = null) {
   try {
-    return localStorage.getItem(TOKEN_KEY)
+    const raw = localStorage.getItem(key);
+    if (raw == null) return fallback;
+    return JSON.parse(raw);
   } catch {
-    return null
+    return fallback;
   }
 }
 
-export function setToken(token) {
+export function setItem(key, value) {
   try {
-    if (token) localStorage.setItem(TOKEN_KEY, token)
-    else localStorage.removeItem(TOKEN_KEY)
+    localStorage.setItem(key, JSON.stringify(value));
+    return true;
   } catch {
-    /* ignore */
+    return false;
   }
 }
 
-export function getStoredUser() {
+export function removeItem(key) {
   try {
-    const raw = localStorage.getItem(USER_KEY)
-    return raw ? JSON.parse(raw) : null
+    localStorage.removeItem(key);
+    return true;
   } catch {
-    return null
+    return false;
   }
 }
 
-export function setStoredUser(user) {
+export function getString(key, fallback = '') {
   try {
-    if (user) localStorage.setItem(USER_KEY, JSON.stringify(user))
-    else localStorage.removeItem(USER_KEY)
+    return localStorage.getItem(key) ?? fallback;
   } catch {
-    /* ignore */
+    return fallback;
   }
 }
 
-export function clearAuthStorage() {
-  setToken(null)
-  setStoredUser(null)
+export function setString(key, value) {
+  try {
+    localStorage.setItem(key, value);
+    return true;
+  } catch {
+    return false;
+  }
 }

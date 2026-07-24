@@ -1,10 +1,13 @@
+import { clsx } from 'clsx';
+import { twMerge } from 'tailwind-merge';
+
 /**
- * Merge class names, filtering out falsy values.
- * Lightweight alternative to clsx for Tailwind class composition.
+ * Merge Tailwind class names safely.
+ * @param {...import('clsx').ClassValue} inputs
+ * @returns {string}
  */
-export function cn(...classes) {
-  return classes
-    .flat(Infinity)
-    .filter((value) => typeof value === 'string' && value.length > 0)
-    .join(' ')
+export function cn(...inputs) {
+  return twMerge(clsx(inputs));
 }
+
+export default cn;

@@ -1,31 +1,15 @@
-import { Navigate } from 'react-router-dom'
-import { useAuth } from '../context/AuthContext'
-import { getRoleHome, normalizeRole } from '../constants/roles'
-import { LoadingScreen } from '../components/common'
+import { Navigate, Outlet } from 'react-router-dom';
+import { useSelector } from 'react-redux';
+import { selectUser } from '../store/slices/authSlice';
+import { ROLES } from '../constants/roles';
 
-/**
- * Restricts access to specific roles.
- * @param {string[]} allowedRoles - e.g. ['customer'], ['venue_owner'], ['admin']
- */
-function RoleRoute({ children, allowedRoles = [] }) {
-  const { user, loading, isAuthenticated } = useAuth()
-
-  if (loading) {
-    return <LoadingScreen message="Checking permissions…" />
+export default function RoleRoute({ allow = [] }) {
+  const user = useSelector(selectUser);
+  if (!user) return <Navigate to="/login" replace />;
+  if (allow.length && !allow.includes(user.role)) {
+    if (user.role === ROLES.ADMIN) return <Navigate to="/admin" replace />;
+    if (user.role === ROLES.OWNER) return <Navigate to="/owner" replace />;
+    return <Navigate to="/app" replace />;
   }
-
-  if (!isAuthenticated || !user) {
-    return <Navigate to="/login" replace />
-  }
-
-  const role = normalizeRole(user.role)
-  const allowed = allowedRoles.map(normalizeRole)
-
-  if (allowed.length > 0 && !allowed.includes(role)) {
-    return <Navigate to={getRoleHome(role)} replace />
-  }
-
-  return children
+  return <Outlet />;
 }
-
-export default RoleRoute

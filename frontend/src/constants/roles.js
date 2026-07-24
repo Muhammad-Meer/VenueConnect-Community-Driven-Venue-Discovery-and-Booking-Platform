@@ -1,33 +1,32 @@
-/** User roles used across auth, routing, and navigation */
-
 export const ROLES = {
   CUSTOMER: 'customer',
   OWNER: 'venue_owner',
   ADMIN: 'admin',
-}
+  GUEST: 'guest',
+};
 
 export const ROLE_LABELS = {
   [ROLES.CUSTOMER]: 'Customer',
   [ROLES.OWNER]: 'Venue Owner',
   [ROLES.ADMIN]: 'Admin',
-}
+  [ROLES.GUEST]: 'Guest',
+};
 
-/** Dashboard home path for each role */
 export const ROLE_HOME = {
-  [ROLES.CUSTOMER]: '/customer/dashboard',
-  [ROLES.OWNER]: '/owner/dashboard',
-  [ROLES.ADMIN]: '/admin/dashboard',
-}
-
-export function getRoleHome(role) {
-  return ROLE_HOME[role] || '/'
-}
+  [ROLES.CUSTOMER]: '/app',
+  [ROLES.OWNER]: '/owner',
+  [ROLES.ADMIN]: '/admin',
+  [ROLES.GUEST]: '/',
+};
 
 export function isOwner(role) {
-  return role === ROLES.OWNER || role === 'owner'
+  return role === ROLES.OWNER;
 }
 
-export function normalizeRole(role) {
-  if (role === 'owner') return ROLES.OWNER
-  return role
+export function isAdmin(role) {
+  return role === ROLES.ADMIN;
+}
+
+export function isCustomer(role) {
+  return role === ROLES.CUSTOMER || !role;
 }

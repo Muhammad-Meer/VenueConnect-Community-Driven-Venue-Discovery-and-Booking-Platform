@@ -1,89 +1,46 @@
-import { forwardRef, useId } from 'react'
-import { cn } from '../../lib/cn'
+import { forwardRef } from 'react';
+import { cn } from '../../lib/cn';
 
 const Input = forwardRef(function Input(
-  {
-    label,
-    helperText,
-    error,
-    leftIcon,
-    rightIcon,
-    className,
-    inputClassName,
-    id,
-    required,
-    disabled,
-    type = 'text',
-    ...props
-  },
-  ref,
+  { label, error, hint, leftIcon, rightIcon, className, containerClassName, id, required, ...props },
+  ref
 ) {
-  const generatedId = useId()
-  const inputId = id || generatedId
-  const hasError = Boolean(error)
-
+  const inputId = id || props.name;
   return (
-    <div className={cn('w-full', className)}>
+    <div className={cn('w-full space-y-1.5', containerClassName)}>
       {label && (
-        <label
-          htmlFor={inputId}
-          className="mb-1.5 block text-sm font-medium text-neutral-700"
-        >
+        <label htmlFor={inputId} className="block text-sm font-medium text-content">
           {label}
           {required && <span className="ml-0.5 text-danger">*</span>}
         </label>
       )}
-
       <div className="relative">
         {leftIcon && (
-          <span className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3 text-neutral-400">
+          <span className="pointer-events-none absolute inset-y-0 left-3 flex items-center text-content-muted">
             {leftIcon}
           </span>
         )}
-
         <input
           ref={ref}
           id={inputId}
-          type={type}
-          disabled={disabled}
-          required={required}
-          aria-invalid={hasError}
-          aria-describedby={
-            hasError ? `${inputId}-error` : helperText ? `${inputId}-help` : undefined
-          }
           className={cn(
-            'w-full h-10 rounded-lg border bg-white px-3 text-sm text-neutral-900',
-            'placeholder:text-neutral-400 transition-colors duration-200',
-            'focus:outline-none focus:ring-2 focus:ring-primary-light/40 focus:border-primary-light',
-            'disabled:bg-neutral-50 disabled:text-neutral-400 disabled:cursor-not-allowed',
-            hasError
-              ? 'border-danger focus:ring-danger/30 focus:border-danger'
-              : 'border-neutral-300 hover:border-neutral-400',
+            'input-base',
             leftIcon && 'pl-10',
             rightIcon && 'pr-10',
-            inputClassName,
+            error && 'border-danger focus:border-danger focus:ring-danger/20',
+            className
           )}
+          aria-invalid={Boolean(error)}
           {...props}
         />
-
         {rightIcon && (
-          <span className="absolute inset-y-0 right-0 flex items-center pr-3 text-neutral-400">
-            {rightIcon}
-          </span>
+          <span className="absolute inset-y-0 right-3 flex items-center text-content-muted">{rightIcon}</span>
         )}
       </div>
-
-      {hasError ? (
-        <p id={`${inputId}-error`} className="mt-1.5 text-xs text-danger">
-          {error}
-        </p>
-      ) : helperText ? (
-        <p id={`${inputId}-help`} className="mt-1.5 text-xs text-neutral-500">
-          {helperText}
-        </p>
-      ) : null}
+      {error && <p className="text-xs text-danger">{error}</p>}
+      {!error && hint && <p className="text-xs text-content-muted">{hint}</p>}
     </div>
-  )
-})
+  );
+});
 
-export default Input
+export default Input;

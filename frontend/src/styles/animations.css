@@ -1,17 +1,16 @@
-@keyframes fade-in {
-  from { opacity: 0; }
-  to { opacity: 1; }
-}
-
-@keyframes fade-out {
-  from { opacity: 1; }
-  to { opacity: 0; }
-}
-
-@keyframes slide-up {
+@keyframes fadeIn {
   from {
     opacity: 0;
-    transform: translateY(12px);
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
   }
   to {
     opacity: 1;
@@ -19,10 +18,10 @@
   }
 }
 
-@keyframes slide-down {
+@keyframes slideDown {
   from {
     opacity: 0;
-    transform: translateY(-12px);
+    transform: translateY(-10px);
   }
   to {
     opacity: 1;
@@ -30,18 +29,7 @@
   }
 }
 
-@keyframes slide-in-right {
-  from {
-    opacity: 0;
-    transform: translateX(16px);
-  }
-  to {
-    opacity: 1;
-    transform: translateX(0);
-  }
-}
-
-@keyframes scale-in {
+@keyframes scaleIn {
   from {
     opacity: 0;
     transform: scale(0.96);
@@ -53,44 +41,52 @@
 }
 
 @keyframes shimmer {
-  0% { background-position: -200% 0; }
-  100% { background-position: 200% 0; }
-}
-
-@keyframes pulse-soft {
-  0%, 100% { opacity: 1; }
-  50% { opacity: 0.55; }
+  0% {
+    background-position: -200% 0;
+  }
+  100% {
+    background-position: 200% 0;
+  }
 }
 
 @keyframes spin {
-  to { transform: rotate(360deg); }
+  to {
+    transform: rotate(360deg);
+  }
 }
 
-@keyframes float {
-  0%, 100% { transform: translateY(0); }
-  50% { transform: translateY(-6px); }
+@keyframes bounceSoft {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-4px);
+  }
 }
 
-.animate-fade-in {
-  animation: fade-in var(--duration-normal) var(--ease-out);
+.animate-page-enter {
+  animation: fadeIn var(--duration-base) var(--ease-standard),
+    slideUp var(--duration-slow) var(--ease-standard);
 }
 
-.animate-slide-up {
-  animation: slide-up var(--duration-slow) var(--ease-out);
-}
-
-.animate-scale-in {
-  animation: scale-in var(--duration-normal) var(--ease-out);
-}
-
-.animate-shimmer {
+.skeleton-shimmer {
+  background: linear-gradient(
+    90deg,
+    rgb(var(--color-surface-muted)) 25%,
+    rgb(var(--color-border)) 50%,
+    rgb(var(--color-surface-muted)) 75%
+  );
+  background-size: 200% 100%;
   animation: shimmer 1.5s infinite linear;
 }
 
-.animate-spin {
-  animation: spin 0.8s linear infinite;
-}
-
-.animate-float {
-  animation: float 3s ease-in-out infinite;
+.dark .skeleton-shimmer {
+  background: linear-gradient(
+    90deg,
+    rgb(var(--color-surface-muted)) 25%,
+    rgb(var(--color-border-strong)) 50%,
+    rgb(var(--color-surface-muted)) 75%
+  );
+  background-size: 200% 100%;
 }

@@ -1,14 +1,7 @@
-import request from './api'
+import api from '../api/client';
 
-export const createPayment = (paymentData) =>
-  request('/payments', {
-    method: 'POST',
-    body: JSON.stringify(paymentData),
-  })
+export const paymentApi = {
+  create: (payload) => api.post('/payments', payload),
+};
 
-export const getPaymentById = (id) => request(`/payments/${id}`)
-
-export const verifyPayment = (paymentId) =>
-  request(`/payments/${paymentId}/verify`, {
-    method: 'POST',
-  })
+export default paymentApi;

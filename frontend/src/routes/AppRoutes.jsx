@@ -1,36 +1,130 @@
-import { BrowserRouter, Routes, Route } from 'react-router-dom'
-import Home from '../pages/Home/Home'
-import Login from '../pages/Auth/Login'
-import Register from '../pages/Auth/Register'
-import ForgotPassword from '../pages/Auth/ForgotPassword'
-import VenueList from '../pages/Venues/VenueList'
-import VenueDetail from '../pages/Venues/VenueDetail'
-import Search from '../pages/Venues/Search'
-import BookingPage from '../pages/Booking/BookingPage'
-import Checkout from '../pages/Booking/Checkout'
-import Success from '../pages/Booking/Success'
-import NotFound from '../pages/NotFound'
-import DesignSystem from '../pages/DesignSystem/DesignSystem'
+import { Navigate, Route, Routes } from 'react-router-dom';
+import { ROLES } from '../constants/roles';
+import MainLayout from '../layouts/MainLayout';
+import AuthLayout from '../layouts/AuthLayout';
+import DashboardLayout from '../layouts/DashboardLayout';
+import ProtectedRoute from './ProtectedRoute';
 
-function AppRoutes() {
-  return (
-    <BrowserRouter>
-      <Routes>
-        <Route path="/" element={<Home />} />
-        <Route path="/design-system" element={<DesignSystem />} />
-        <Route path="/login" element={<Login />} />
-        <Route path="/register" element={<Register />} />
-        <Route path="/forgot-password" element={<ForgotPassword />} />
-        <Route path="/venues" element={<VenueList />} />
-        <Route path="/venues/:id" element={<VenueDetail />} />
-        <Route path="/search" element={<Search />} />
-        <Route path="/booking" element={<BookingPage />} />
-        <Route path="/checkout" element={<Checkout />} />
-        <Route path="/success" element={<Success />} />
-        <Route path="*" element={<NotFound />} />
-      </Routes>
-    </BrowserRouter>
-  )
+import Home from '../pages/public/Home';
+import Search from '../pages/public/Search';
+import VenueDetails from '../pages/public/VenueDetails';
+
+import Login from '../pages/auth/Login';
+import Register from '../pages/auth/Register';
+import ForgotPassword from '../pages/auth/ForgotPassword';
+import EmailConfirmation from '../pages/auth/EmailConfirmation';
+
+import CustomerDashboard from '../pages/customer/Dashboard';
+import Bookings from '../pages/customer/Bookings';
+import Checkout from '../pages/customer/Checkout';
+import BookingSuccess from '../pages/customer/BookingSuccess';
+import Favorites from '../pages/customer/Favorites';
+import Team from '../pages/customer/Team';
+import Messages from '../pages/customer/Messages';
+import Notifications from '../pages/customer/Notifications';
+import Profile from '../pages/customer/Profile';
+
+import OwnerDashboard from '../pages/owner/Dashboard';
+import OwnerVenues from '../pages/owner/Venues';
+import VenueForm from '../pages/owner/VenueForm';
+import OwnerBookings from '../pages/owner/Bookings';
+import OwnerRequests from '../pages/owner/Requests';
+import OwnerSeats from '../pages/owner/Seats';
+import OwnerRevenue from '../pages/owner/Revenue';
+import OwnerCustomers from '../pages/owner/Customers';
+import OwnerMessages from '../pages/owner/Messages';
+import OwnerSettings from '../pages/owner/Settings';
+
+import AdminDashboard from '../pages/admin/Dashboard';
+import AdminUsers from '../pages/admin/Users';
+import AdminVenues from '../pages/admin/Venues';
+import AdminVerification from '../pages/admin/Verification';
+import AdminReviews from '../pages/admin/Reviews';
+import AdminReports from '../pages/admin/Reports';
+import AdminAnalytics from '../pages/admin/Analytics';
+import AdminSettings from '../pages/admin/Settings';
+
+import NotFound from '../pages/system/NotFound';
+import Unauthorized from '../pages/system/Unauthorized';
+
+function OwnerLayout() {
+  return <DashboardLayout basePath="/owner" />;
 }
 
-export default AppRoutes
+function AdminLayout() {
+  return <DashboardLayout basePath="/admin" />;
+}
+
+function CustomerLayout() {
+  return <DashboardLayout basePath="/app" />;
+}
+
+export default function AppRoutes() {
+  return (
+    <Routes>
+      <Route element={<MainLayout />}>
+        <Route index element={<Home />} />
+        <Route path="search" element={<Search />} />
+        <Route path="venues/:id" element={<VenueDetails />} />
+        <Route path="email-confirmation" element={<EmailConfirmation />} />
+        <Route path="unauthorized" element={<Unauthorized />} />
+        <Route path="*" element={<NotFound />} />
+      </Route>
+
+      <Route element={<AuthLayout />}>
+        <Route path="login" element={<Login />} />
+        <Route path="register" element={<Register />} />
+        <Route path="forgot-password" element={<ForgotPassword />} />
+      </Route>
+
+      <Route element={<ProtectedRoute roles={[ROLES.CUSTOMER, ROLES.OWNER, ROLES.ADMIN]} />}>
+        <Route path="app" element={<CustomerLayout />}>
+          <Route index element={<CustomerDashboard />} />
+          <Route path="bookings" element={<Bookings />} />
+          <Route path="bookings/checkout" element={<Checkout />} />
+          <Route path="bookings/success" element={<BookingSuccess />} />
+          <Route path="favorites" element={<Favorites />} />
+          <Route path="team" element={<Team />} />
+          <Route path="messages" element={<Messages />} />
+          <Route path="notifications" element={<Notifications />} />
+          <Route path="profile" element={<Profile />} />
+        </Route>
+      </Route>
+
+      <Route element={<ProtectedRoute roles={[ROLES.OWNER]} />}>
+        <Route path="owner" element={<OwnerLayout />}>
+          <Route index element={<OwnerDashboard />} />
+          <Route path="venues" element={<OwnerVenues />} />
+          <Route path="venues/new" element={<VenueForm />} />
+          <Route path="venues/:id/edit" element={<VenueForm />} />
+          <Route path="bookings" element={<OwnerBookings />} />
+          <Route path="requests" element={<OwnerRequests />} />
+          <Route path="seats" element={<OwnerSeats />} />
+          <Route path="revenue" element={<OwnerRevenue />} />
+          <Route path="customers" element={<OwnerCustomers />} />
+          <Route path="messages" element={<OwnerMessages />} />
+          <Route path="settings" element={<OwnerSettings />} />
+          <Route path="notifications" element={<Notifications />} />
+          <Route path="profile" element={<Profile />} />
+        </Route>
+      </Route>
+
+      <Route element={<ProtectedRoute roles={[ROLES.ADMIN]} />}>
+        <Route path="admin" element={<AdminLayout />}>
+          <Route index element={<AdminDashboard />} />
+          <Route path="users" element={<AdminUsers />} />
+          <Route path="venues" element={<AdminVenues />} />
+          <Route path="verification" element={<AdminVerification />} />
+          <Route path="reviews" element={<AdminReviews />} />
+          <Route path="reports" element={<AdminReports />} />
+          <Route path="analytics" element={<AdminAnalytics />} />
+          <Route path="settings" element={<AdminSettings />} />
+          <Route path="notifications" element={<Notifications />} />
+          <Route path="profile" element={<Profile />} />
+        </Route>
+      </Route>
+
+      <Route path="dashboard" element={<Navigate to="/app" replace />} />
+    </Routes>
+  );
+}

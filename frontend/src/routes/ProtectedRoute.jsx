@@ -1,23 +1,19 @@
-import { Navigate, useLocation } from 'react-router-dom'
-import { useAuth } from '../context/AuthContext'
-import { LoadingScreen } from '../components/common'
+import { Navigate, Outlet, useLocation } from 'react-router-dom';
+import { useSelector } from 'react-redux';
+import { selectIsAuthenticated, selectUser } from '../store/slices/authSlice';
 
-/**
- * Requires an authenticated user. Redirects to /login with return path.
- */
-function ProtectedRoute({ children }) {
-  const { isAuthenticated, loading } = useAuth()
-  const location = useLocation()
-
-  if (loading) {
-    return <LoadingScreen message="Checking session…" />
-  }
+export default function ProtectedRoute({ roles }) {
+  const isAuthenticated = useSelector(selectIsAuthenticated);
+  const user = useSelector(selectUser);
+  const location = useLocation();
 
   if (!isAuthenticated) {
-    return <Navigate to="/login" replace state={{ from: location.pathname }} />
+    return <Navigate to="/login" replace state={{ from: location.pathname }} />;
   }
 
-  return children
-}
+  if (roles?.length && user?.role && !roles.includes(user.role)) {
+    return <Navigate to="/unauthorized" replace />;
+  }
 
-export default ProtectedRoute
+  return <Outlet />;
+}

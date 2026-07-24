@@ -1,19 +1,12 @@
-import Spinner from '../ui/Spinner'
-import { cn } from '../../lib/cn'
+import Spinner from '../ui/Spinner';
+import Logo from './Logo';
 
-function LoadingScreen({ message = 'Loading…', className, fullScreen = true }) {
+export default function LoadingScreen({ label = 'Loading VenueHub…' }) {
   return (
-    <div
-      className={cn(
-        'flex flex-col items-center justify-center gap-3 text-neutral-500',
-        fullScreen ? 'min-h-[50vh]' : 'py-16',
-        className,
-      )}
-    >
-      <Spinner size="lg" className="text-primary" />
-      <p className="text-sm font-medium">{message}</p>
+    <div className="flex min-h-screen flex-col items-center justify-center gap-4 bg-surface-muted">
+      <Logo />
+      <Spinner size="lg" />
+      <p className="text-sm text-content-muted">{label}</p>
     </div>
-  )
+  );
 }
-
-export default LoadingScreen

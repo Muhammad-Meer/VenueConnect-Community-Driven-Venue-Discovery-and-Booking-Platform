@@ -1,17 +1,11 @@
-import { useEffect, useId } from 'react'
-import { createPortal } from 'react-dom'
-import { cn } from '../../lib/cn'
-import Button from './Button'
+import { useEffect } from 'react';
+import { createPortal } from 'react-dom';
+import { AnimatePresence, motion } from 'framer-motion';
+import { X } from 'lucide-react';
+import { cn } from '../../lib/cn';
+import Button from './Button';
 
-const sizes = {
-  sm: 'max-w-md',
-  md: 'max-w-lg',
-  lg: 'max-w-2xl',
-  xl: 'max-w-4xl',
-  full: 'max-w-5xl',
-}
-
-function Modal({
+export default function Modal({
   open,
   onClose,
   title,
@@ -20,94 +14,66 @@ function Modal({
   footer,
   size = 'md',
   className,
-  showClose = true,
-  closeOnOverlay = true,
 }) {
-  const titleId = useId()
-
   useEffect(() => {
-    if (!open) return undefined
-
-    const onKeyDown = (event) => {
-      if (event.key === 'Escape') onClose?.()
-    }
-
-    document.addEventListener('keydown', onKeyDown)
-    const previousOverflow = document.body.style.overflow
-    document.body.style.overflow = 'hidden'
-
+    if (!open) return undefined;
+    const onKey = (e) => e.key === 'Escape' && onClose?.();
+    document.addEventListener('keydown', onKey);
+    document.body.style.overflow = 'hidden';
     return () => {
-      document.removeEventListener('keydown', onKeyDown)
-      document.body.style.overflow = previousOverflow
-    }
-  }, [open, onClose])
+      document.removeEventListener('keydown', onKey);
+      document.body.style.overflow = '';
+    };
+  }, [open, onClose]);
 
-  if (!open) return null
+  if (typeof document === 'undefined') return null;
+
+  const widths = {
+    sm: 'max-w-md',
+    md: 'max-w-lg',
+    lg: 'max-w-2xl',
+    xl: 'max-w-4xl',
+    full: 'max-w-6xl',
+  };
 
   return createPortal(
-    <div className="fixed inset-0 z-modal flex items-end sm:items-center justify-center p-0 sm:p-4">
-      <div
-        className="absolute inset-0 bg-neutral-900/50 backdrop-blur-[2px] animate-fade-in"
-        onClick={closeOnOverlay ? onClose : undefined}
-        aria-hidden="true"
-      />
-
-      <div
-        role="dialog"
-        aria-modal="true"
-        aria-labelledby={title ? titleId : undefined}
-        className={cn(
-          'relative w-full bg-white shadow-xl animate-scale-in',
-          'rounded-t-2xl sm:rounded-2xl max-h-[92vh] flex flex-col',
-          sizes[size] || sizes.md,
-          className,
-        )}
-      >
-        {(title || showClose) && (
-          <div className="flex items-start justify-between gap-4 px-5 pt-5 pb-3 sm:px-6 sm:pt-6">
-            <div className="min-w-0">
-              {title && (
-                <h2
-                  id={titleId}
-                  className="text-lg font-semibold text-neutral-900 tracking-tight"
-                >
-                  {title}
-                </h2>
-              )}
-              {description && (
-                <p className="mt-1 text-sm text-neutral-500">{description}</p>
-              )}
-            </div>
-
-            {showClose && (
-              <Button
-                variant="ghost"
-                size="icon-sm"
-                onClick={onClose}
-                aria-label="Close dialog"
-                className="shrink-0 text-neutral-400 hover:text-neutral-700"
-              >
-                <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
-                </svg>
-              </Button>
+    <AnimatePresence>
+      {open && (
+        <div className="fixed inset-0 z-modal flex items-end justify-center sm:items-center p-0 sm:p-4">
+          <motion.div
+            className="absolute inset-0 bg-slate-950/50 backdrop-blur-sm"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            onClick={onClose}
+          />
+          <motion.div
+            role="dialog"
+            aria-modal="true"
+            initial={{ opacity: 0, y: 24, scale: 0.98 }}
+            animate={{ opacity: 1, y: 0, scale: 1 }}
+            exit={{ opacity: 0, y: 16, scale: 0.98 }}
+            className={cn(
+              'relative z-10 flex max-h-[92vh] w-full flex-col rounded-t-2xl border border-border bg-surface shadow-xl sm:rounded-2xl',
+              widths[size],
+              className
             )}
-          </div>
-        )}
-
-        <div className="px-5 sm:px-6 pb-5 sm:pb-6 overflow-y-auto scrollbar-thin flex-1">
-          {children}
+          >
+            <div className="flex items-start justify-between gap-4 border-b border-border px-5 py-4">
+              <div>
+                {title && <h3 className="text-lg font-semibold text-content">{title}</h3>}
+                {description && <p className="mt-1 text-sm text-content-muted">{description}</p>}
+              </div>
+              <Button variant="ghost" size="icon" onClick={onClose} aria-label="Close">
+                <X className="h-5 w-5" />
+              </Button>
+            </div>
+            <div className="overflow-y-auto px-5 py-4">{children}</div>
+            {footer && <div className="border-t border-border px-5 py-4">{footer}</div>}
+          </motion.div>
         </div>
-
-        {footer && (
-          <div className="px-5 sm:px-6 py-4 border-t border-neutral-100 flex flex-col-reverse sm:flex-row sm:justify-end gap-2 bg-neutral-50/80 rounded-b-2xl">
-            {footer}
-          </div>
-        )}
-      </div>
-    </div>,
-    document.body,
-  )
+      )}
+    </AnimatePresence>,
+    document.body
+  );
 }
-
-export default Modal
