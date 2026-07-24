@@ -1,71 +1,77 @@
-/**
- * Centralized design tokens for VenueHub.
- *
- * Single source of truth for colors, typography, radius, shadows,
- * spacing, breakpoints, animation, and z-index.
- *
- * Runtime CSS variables live in `styles/variables.css` and must stay
- * aligned with the values defined here. Tailwind maps tokens via
- * `tailwind.config.js` so changing the theme cascade updates the UI.
- */
 export const theme = Object.freeze({
   name: 'VenueHub',
+
   modes: Object.freeze(['light', 'dark']),
   defaultMode: 'light',
 
   colors: Object.freeze({
     brand: Object.freeze({
-      50: '#eef7ff',
-      100: '#d9ecff',
-      200: '#bcdcff',
-      300: '#8ec6ff',
-      400: '#59a5ff',
-      500: '#3381ff',
-      600: '#1a5ff5',
-      700: '#144ae1',
-      800: '#173cb6',
-      900: '#19368f',
-      950: '#142257',
+      50: '#f0f9ff',
+      100: '#e0f2fe',
+      200: '#bae6fd',
+      300: '#7dd3fc',
+      400: '#38bdf8',
+      500: '#0ea5e9',
+      600: '#0284c7',
+      700: '#0369a1',
+      800: '#075985',
+      900: '#0c4a6e',
+      950: '#082f49',
     }),
+
     light: Object.freeze({
       surface: '#ffffff',
-      surfaceElevated: '#ffffff',
-      surfaceMuted: '#f4f6f9',
+      surfaceElevated: '#fafafa',
+      surfaceMuted: '#f8fafc',
       surfaceInverse: '#0f172a',
+
       content: '#0f172a',
       contentSecondary: '#334155',
       contentMuted: '#64748b',
       contentInverse: '#f8fafc',
+
       border: '#e2e8f0',
       borderStrong: '#cbd5e1',
-      success: '#16a34a',
-      successSoft: '#dcfce7',
-      warning: '#d97706',
+
+      success: '#10b981',
+      successSoft: '#d1fae5',
+      warning: '#f59e0b',
       warningSoft: '#fef3c7',
-      danger: '#dc2626',
+      danger: '#ef4444',
       dangerSoft: '#fee2e2',
-      info: '#0284c7',
+      info: '#0ea5e9',
       infoSoft: '#e0f2fe',
     }),
+
     dark: Object.freeze({
-      surface: '#0b1220',
-      surfaceElevated: '#111827',
-      surfaceMuted: '#0f172a',
-      surfaceInverse: '#f8fafc',
-      content: '#f1f5f9',
-      contentSecondary: '#cbd5e1',
+      // Modern dark palette - deep, rich, and premium
+      surface: '#0f172a',          // Slate 900
+      surfaceElevated: '#1e2937',  // Slate 800
+      surfaceMuted: '#334155',     // Slate 700
+      surfaceInverse: '#f1f5f9',
+
+      // Text
+      content: '#f8fafc',
+      contentSecondary: '#e2e8f0',
       contentMuted: '#94a3b8',
       contentInverse: '#0f172a',
-      border: '#1e293b',
-      borderStrong: '#334155',
-      success: '#22c55e',
-      successSoft: '#14532d',
-      warning: '#f59e0b',
+
+      // Borders
+      border: '#334155',
+      borderStrong: '#475569',
+
+      // Status colors - vibrant and modern
+      success: '#34d399',
+      successSoft: '#064e3b',
+
+      warning: '#fbbf24',
       warningSoft: '#78350f',
-      danger: '#ef4444',
+
+      danger: '#f87171',
       dangerSoft: '#7f1d1d',
-      info: '#38bdf8',
-      infoSoft: '#0c4a6e',
+
+      info: '#22d3ee',
+      infoSoft: '#164e63',
     }),
   }),
 
@@ -73,6 +79,7 @@ export const theme = Object.freeze({
     fontSans: "'Inter', system-ui, sans-serif",
     fontDisplay: "'Plus Jakarta Sans', 'Inter', system-ui, sans-serif",
     fontMono: "ui-monospace, 'SF Mono', Menlo, monospace",
+
     weights: Object.freeze({
       regular: 400,
       medium: 500,
@@ -80,6 +87,7 @@ export const theme = Object.freeze({
       bold: 700,
       extrabold: 800,
     }),
+
     sizes: Object.freeze({
       '2xs': '0.625rem',
       xs: '0.75rem',
@@ -104,12 +112,12 @@ export const theme = Object.freeze({
   }),
 
   shadow: Object.freeze({
-    xs: '0 1px 2px 0 rgb(15 23 42 / 0.04)',
-    sm: '0 1px 3px 0 rgb(15 23 42 / 0.08), 0 1px 2px -1px rgb(15 23 42 / 0.06)',
-    md: '0 4px 12px -2px rgb(15 23 42 / 0.08), 0 2px 6px -2px rgb(15 23 42 / 0.05)',
-    lg: '0 12px 28px -6px rgb(15 23 42 / 0.12), 0 4px 10px -4px rgb(15 23 42 / 0.06)',
-    xl: '0 24px 48px -12px rgb(15 23 42 / 0.18)',
-    glow: '0 0 0 4px rgb(51 129 255 / 0.18)',
+    xs: '0 1px 2px 0 rgb(15 23 42 / 0.05)',
+    sm: '0 1px 3px 0 rgb(15 23 42 / 0.1), 0 1px 2px -1px rgb(15 23 42 / 0.08)',
+    md: '0 4px 6px -1px rgb(15 23 42 / 0.1), 0 2px 4px -2px rgb(15 23 42 / 0.1)',
+    lg: '0 10px 15px -3px rgb(15 23 42 / 0.1), 0 4px 6px -4px rgb(15 23 42 / 0.1)',
+    xl: '0 20px 25px -5px rgb(15 23 42 / 0.1), 0 8px 10px -6px rgb(15 23 42 / 0.1)',
+    glow: '0 0 0 4px rgb(14 165 233 / 0.2)',
   }),
 
   spacing: Object.freeze({

@@ -3,13 +3,26 @@ import { cn } from '../../lib/cn';
 import Spinner from './Spinner';
 
 const variants = {
-  primary: 'bg-brand-600 text-white hover:bg-brand-700 shadow-sm',
-  secondary: 'bg-surface-muted text-content hover:bg-border border border-border',
-  outline: 'border border-border bg-transparent text-content hover:bg-surface-muted',
-  ghost: 'bg-transparent text-content-secondary hover:bg-surface-muted hover:text-content',
-  danger: 'bg-danger text-white hover:bg-red-700',
-  success: 'bg-success text-white hover:bg-green-700',
-  soft: 'bg-brand-50 text-brand-700 hover:bg-brand-100 dark:bg-brand-950 dark:text-brand-200',
+  primary:
+    'bg-gradient-to-r from-teal-500 to-cyan-600 text-white hover:from-teal-600 hover:to-cyan-700 shadow-lg',
+
+  secondary:
+    'bg-slate-100 text-slate-800 hover:bg-slate-200 border border-slate-300',
+
+  outline:
+    'border border-teal-500 text-teal-600 bg-transparent hover:bg-teal-50',
+
+  ghost:
+    'bg-transparent text-slate-600 hover:bg-slate-100 hover:text-slate-900',
+
+  danger:
+    'bg-red-600 text-white hover:bg-red-700',
+
+  success:
+    'bg-emerald-600 text-white hover:bg-emerald-700',
+
+  soft:
+    'bg-teal-50 text-teal-700 hover:bg-teal-100',
 };
 
 const sizes = {
