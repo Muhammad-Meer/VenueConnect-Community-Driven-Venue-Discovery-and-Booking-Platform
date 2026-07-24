@@ -34,7 +34,7 @@ export default function Login() {
 
   const onSubmit = async (values) => {
     const result = await login(values);
-    if (login.fulfilled.match(result) || result?.meta?.requestStatus === 'fulfilled') {
+    if (result?.meta?.requestStatus === 'fulfilled') {
       toast.success('Welcome back', 'You are signed in.');
     }
   };

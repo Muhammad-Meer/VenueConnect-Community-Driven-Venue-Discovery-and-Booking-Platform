@@ -8,6 +8,7 @@ import notificationReducer from './slices/notificationSlice';
 import ownerReducer from './slices/ownerSlice';
 import adminReducer from './slices/adminSlice';
 import themeReducer from './slices/themeSlice';
+import { config } from '@/config';
 
 export const store = configureStore({
   reducer: {
@@ -23,9 +24,22 @@ export const store = configureStore({
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({
-      serializableCheck: false,
+      serializableCheck: {
+        // localStorage side-effects in reducers are intentional for session/theme
+        ignoredActions: [
+          'auth/login/fulfilled',
+          'auth/register/fulfilled',
+          'theme/setTheme',
+          'theme/toggleTheme',
+        ],
+      },
     }),
-  devTools: import.meta.env.DEV,
+  devTools: config.isDev,
 });
+
+/**
+ * @typedef {ReturnType<typeof store.getState>} RootState
+ * @typedef {typeof store.dispatch} AppDispatch
+ */
 
 export default store;

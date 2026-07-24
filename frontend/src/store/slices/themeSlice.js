@@ -1,25 +1,21 @@
 import { createSlice } from '@reduxjs/toolkit';
-import { config } from '../../config';
-import { getString, setString } from '../../utils/storage';
+import { config } from '@/config';
+import { theme as designTheme, applyThemeMode } from '@/theme';
+import { getString, setString } from '@/utils/storage';
 
 function getInitialMode() {
   const saved = getString(config.themeKey);
   if (saved === 'light' || saved === 'dark') return saved;
+
   if (typeof window !== 'undefined' && window.matchMedia('(prefers-color-scheme: dark)').matches) {
     return 'dark';
   }
-  return 'light';
-}
 
-function applyDomTheme(mode) {
-  if (typeof document === 'undefined') return;
-  const root = document.documentElement;
-  if (mode === 'dark') root.classList.add('dark');
-  else root.classList.remove('dark');
+  return designTheme.defaultMode;
 }
 
 const initialMode = getInitialMode();
-applyDomTheme(initialMode);
+applyThemeMode(initialMode);
 
 const themeSlice = createSlice({
   name: 'theme',
@@ -28,18 +24,21 @@ const themeSlice = createSlice({
   },
   reducers: {
     setTheme(state, action) {
-      state.mode = action.payload;
-      setString(config.themeKey, action.payload);
-      applyDomTheme(action.payload);
+      const next = action.payload === 'dark' ? 'dark' : 'light';
+      state.mode = next;
+      setString(config.themeKey, next);
+      applyThemeMode(next);
     },
     toggleTheme(state) {
-      state.mode = state.mode === 'dark' ? 'light' : 'dark';
-      setString(config.themeKey, state.mode);
-      applyDomTheme(state.mode);
+      const next = state.mode === 'dark' ? 'light' : 'dark';
+      state.mode = next;
+      setString(config.themeKey, next);
+      applyThemeMode(next);
     },
   },
 });
 
 export const { setTheme, toggleTheme } = themeSlice.actions;
 export const selectThemeMode = (state) => state.theme.mode;
+export const selectIsDarkMode = (state) => state.theme.mode === 'dark';
 export default themeSlice.reducer;
